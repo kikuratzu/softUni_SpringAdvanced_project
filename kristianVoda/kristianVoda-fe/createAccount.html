@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Create Account</title>
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Goldman&display=swap" />
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Goldman', serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+    padding: 20px;
+  }
+
+  #mainDiv {
+    background: #fff;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    font-size: 3em;
+    color: #d6336c;
+    letter-spacing: 2px;
+    text-align: center;
+    font-weight: normal;
+  }
+
+  /* Container for each input + label + icon */
+  .input-group {
+    position: relative;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  /* Input styling with icon alignment */
+  input {
+    width: 100%;
+    padding: 18px 20px 18px 50px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    font-family: 'Goldman', serif;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  input:focus {
+    border-color: #d6336c;
+    box-shadow: 0 0 8px rgba(214, 51, 108, 0.3);
+  }
+
+  /* Icon positioned to the left inside input */
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #d6336c;
+    font-size: 1.4em;
+    pointer-events: none;
+  }
+
+  /* Labels that animate when input is active or filled */
+  .input-group label {
+    position: absolute;
+    top: -10px;
+    left: 55px;
+    background: #fff;
+    padding: 0 6px;
+    font-size: 0.9em;
+    color: #d6336c;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  input:focus + label,
+  input:not(:placeholder-shown) + label {
+    top: -20px;
+    font-size: 0.8em;
+    color: #a52a55;
+  }
+
+  /* Error message styling */
+  #invalidPasswordOrEmailOrUsername {
+    height: 1.2em;
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #e74c3c;
+    width: 100%;
+    text-align: left;
+  }
+
+  /* List for password requirements, aligned with inputs */
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+
+  li {
+    font-size: 0.9em;
+    margin: 4px 0;
+    color: #333;
+  }
+
+  /* Create button styling, centered and consistent */
+  #create {
+    width: 100%;
+    padding: 15px;
+    margin-top: 30px;
+    border-radius: 10px;
+    border: none;
+    background-color: #d6336c;
+    color: #fff;
+    font-size: 1.3em;
+    cursor: pointer;
+    font-family: 'Goldman', serif;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  #create:hover {
+    background-color: #a52a55;
+    transform: translateY(-2px);
+  }
+
+  /* Optional: Make inputs and button more visually consistent */
+  /* Responsive adjustments */
+  @media(max-width: 600px){
+    #mainDiv {
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="mainDiv">
+  <h1>CREATE ACCOUNT</h1>
+
+  <!-- Username -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-user"></i></div>
+    <input id="username" placeholder=" " required />
+    <label for="username">Username</label>
+  </div>
+  <small id="alreadyExistingUsernameOrEmptyField"></small>
+
+  <!-- First Name -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-user"></i></div>
+    <input id="firstName" placeholder=" " required />
+    <label for="firstName">First Name</label>
+  </div>
+  <small id="invalidFirstName"></small>
+
+  <!-- Last Name -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-user"></i></div>
+    <input id="lastName" placeholder=" " required />
+    <label for="lastName">Last Name</label>
+  </div>
+  <small id="invalidLastName"></small>
+
+  <!-- Email -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-envelope"></i></div>
+    <input id="email" placeholder=" " required />
+    <label for="email">Email</label>
+  </div>
+  <small id="invalidEmail"></small>
+
+  <!-- Password -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-lock"></i></div>
+    <input id="password" type="password" placeholder=" " required />
+    <label for="password">Password</label>
+  </div>
+  <ul>
+    <li id="8symbols" class="passwordNeeds">Password must be longer than 8 symbols</li>
+    <li id="capitalSymbol" class="passwordNeeds">Password must contain at least 1 capital character</li>
+    <li id="specialSymbol" class="passwordNeeds">Password must contain at least 1 special character</li>
+  </ul>
+
+  <!-- Confirm Password -->
+  <div class="input-group">
+    <div class="input-icon"><i class="fas fa-lock"></i></div>
+    <input id="confirmPassword" type="password" placeholder=" " required />
+    <label for="confirmPassword">Confirm Password</label>
+  </div>
+  <small id="passwordsDontMatch"></small>
+
+  <!-- Create Button -->
+  <button id='create'>Create</button>
+</div>
+
+<script>
+  document.getElementById('create').addEventListener('click', async () => {
+    let sendRequest = true;
+
+    // Clear previous messages
+    document.getElementById('alreadyExistingUsernameOrEmptyField').textContent = '';
+    document.getElementById('invalidEmail').textContent = '';
+    document.getElementById('passwordsDontMatch').textContent = '';
+    document.getElementById('invalidFirstName').textContent = '';
+    document.getElementById('invalidLastName').textContent = '';
+
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+
+    // Username validation
+    if (!username) {
+      sendRequest = false;
+      document.getElementById('alreadyExistingUsernameOrEmptyField').textContent = 'Username cannot be empty';
+      document.getElementById('alreadyExistingUsernameOrEmptyField').style.color = 'red';
+    } else {
+      try {
+        const usernameResponse = await fetch(`http://localhost:8080/login/createUser/username?username=${encodeURIComponent(username)}`);
+        const usernameExists = await usernameResponse.json();
+        if (usernameExists) {
+          sendRequest = false;
+          document.getElementById('alreadyExistingUsernameOrEmptyField').textContent = 'A user with this username already exists';
+          document.getElementById('alreadyExistingUsernameOrEmptyField').style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Email validation
+    if (!email) {
+      sendRequest = false;
+      document.getElementById('invalidEmail').textContent = 'Email cannot be empty';
+      document.getElementById('invalidEmail').style.color = 'red';
+    } else {
+      try {
+        const emailResponse = await fetch(`http://localhost:8080/login/createUser/email?email=${encodeURIComponent(email)}`);
+        const emailExists = await emailResponse.json();
+        if (emailExists) {
+          sendRequest = false;
+          document.getElementById('invalidEmail').textContent = 'A user with this email already exists';
+          document.getElementById('invalidEmail').style.color = 'red';
+        } else if (!(email.endsWith('@gmail.com') || email.endsWith('@abv.bg'))) {
+          sendRequest = false;
+          document.getElementById('invalidEmail').textContent = 'Not a valid email';
+          document.getElementById('invalidEmail').style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Password validations
+    if (!/[A-Z]/.test(password)) {
+      sendRequest = false;
+      document.getElementById('capitalSymbol').style.color = 'red';
+    } else {
+      document.getElementById('capitalSymbol').style.color = 'black';
+    }
+
+    if (password.length < 8) {
+      sendRequest = false;
+      document.getElementById('8symbols').style.color = 'red';
+    } else {
+      document.getElementById('8symbols').style.color = 'black';
+    }
+
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+      sendRequest = false;
+      document.getElementById('specialSymbol').style.color = 'red';
+    } else {
+      document.getElementById('specialSymbol').style.color = 'black';
+    }
+
+    if (password !== confirmPassword) {
+      sendRequest = false;
+      document.getElementById('passwordsDontMatch').textContent = 'Passwords do not match';
+      document.getElementById('passwordsDontMatch').style.color = 'red';
+    } else {
+      document.getElementById('passwordsDontMatch').textContent = '';
+    }
+
+    // First Name validation
+    if (!firstName) {
+      sendRequest = false;
+      document.getElementById('invalidFirstName').textContent = 'First name cannot be empty';
+      document.getElementById('invalidFirstName').style.color = 'red';
+    } else {
+      document.getElementById('invalidFirstName').textContent = '';
+    }
+
+    // Last Name validation
+    if (!lastName) {
+      sendRequest = false;
+      document.getElementById('invalidLastName').textContent = 'Last name cannot be empty';
+      document.getElementById('invalidLastName').style.color = 'red';
+    } else {
+      document.getElementById('invalidLastName').textContent = '';
+    }
+
+    // Submit if all is valid
+    if (sendRequest) {
+      const data = { username, firstName, lastName, email, password };
+      try {
+        const response = await fetch('http://localhost:8080/login/createUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Network response was not ok');
+        const result = await response.json();
+        if (result === true) {
+          window.location.href = 'loginPage.html';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+#mainDiv{
+    display: flex;
+    flex-direction: column;
+    border: solid;
+    width: 30em;
+    height: 30em;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: #83aeec;
+    border: none;
+    border-radius: 50px;
+
+}
+body{
+      display: flex;
+  justify-content: center; 
+  align-items: center;     
+  height: 100vh;
+  background-color: #dfa0c4;
+}
+input{
+    width: 30em;
+    height: 2em;
+    border: none;
+    border-radius: 50px;
+
+}
+button{
+width: 25em;
+height: 4em;
+background-color: white;
+border: none;
+border-radius: 50px;
+transition-duration: 0.6s;
+ font-family: "Goldman", sans-serif;
+ 
+}
+#links{
+    display: flex;
+    flex-direction: row;
+    border: none;
+    gap: 10em;
+    position: relative;
+    top: 3em;
+}
+h1{
+    position: relative;
+    bottom: 1em;
+    font-size: 3em;
+     font-family: "Goldman", sans-serif;
+}
+a{
+    text-decoration: none;
+    color: green;
+     font-family: "Goldman", sans-serif;
+}
+button:hover{
+    background-color: #dfa0c4;
+    width: 25.2em;
+    height: 4.2em;
+    
+}
+small{
+    color: red;
+     font-family: "Goldman", sans-serif;
+}

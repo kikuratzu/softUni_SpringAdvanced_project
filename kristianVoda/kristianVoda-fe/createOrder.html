@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Order Page</title>
+<style>
+  /* Reset and base styles */
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 80px;
+    box-sizing: border-box;
+  }
+
+  /* Navbar styling */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9c0d5;
+    padding: 15px 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 0 0 10px 10px;
+  }
+
+  nav .logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #d94f8f;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #a14666;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  nav ul li a:hover {
+    background-color: rgba(217, 79, 143, 0.2);
+    color: #d94f8f;
+    transform: translateY(-2px);
+  }
+
+  #cart {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  #cart:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+
+  /* Main container styles */
+  .order-container {
+    background: #fff0f6;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 850px;
+    width: 90%;
+    box-sizing: border-box;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    color: #cc3366;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  /* Cart section styles */
+  .cart-section {
+    margin-bottom: 30px;
+  }
+
+  .cart-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #993366;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #cc99a2;
+    padding-bottom: 8px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+
+  thead {
+    background-color: #f8b6c1;
+  }
+
+  th {
+    padding: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  td {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* Image styling */
+  .item-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+
+  .item-img:hover {
+    transform: scale(1.05);
+  }
+
+  /* Total display */
+  .total-container {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-top: 10px;
+    color: #663366;
+  }
+
+  /* Form labels and inputs */
+  label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #993366;
+  }
+
+  input[type="text"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #cc99a2;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input[type="text"]:focus,
+  input[type="tel"]:focus {
+    border-color: #e75480;
+    outline: none;
+    box-shadow: 0 0 8px rgba(231, 84, 128, 0.2);
+  }
+
+  /* Order button styles */
+  #orderButton {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin-top: 20px;
+    background-color: #e75480;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  #orderButton:hover {
+    background-color: #d44a70;
+    transform: translateY(-2px);
+  }
+
+  /* Responsive design */
+  @media(max-width: 600px){
+    .order-container {
+      padding: 30px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="logo">WaterShop</a>
+    <ul>
+      <li><a href="starterPage.html">Продукти</a></li>
+      <li><a href="#">За нас</a></li>
+      <li><a href="">Контакти</a></li>
+      <li>
+        <img id='cart' src="grocery-store.png" title="Cart" />
+      </li>
+      <li>
+        <a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main content -->
+  <div class="order-container">
+    <h1>Вашата поръчка</h1>
+    <!-- Cart Items Table -->
+    <div class="cart-section">
+      <div class="cart-title">Вашата количка</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px;">Снимка</th>
+            <th style="width:80px;">Брой</th>
+            <th style="width:150px;">Вид</th>
+            <th style="width:150px;">Цена</th>
+          </tr>
+        </thead>
+        <tbody id="cartBody">
+          <!-- Items will be dynamically inserted here -->
+        </tbody>
+      </table>
+      <div class="total-container">
+        Обща цена: <span id="totalAmount">0.00</span>
+      </div>
+    </div>
+
+    <!-- Order Form -->
+    <div style="margin-top:20px;">
+      <label for="address">Адрес:</label>
+      <input type="text" id="address" placeholder="Въведете вашия адрес" required />
+      <small id='emptyAddress' style="color: red; display:none;">Полето за адрес не може да бъде празно!</small>
+      
+      <label for="phonenumber">Телефонен номер:</label>
+      <input type="tel" id="phonenumber" placeholder="Въведете вашия телефонен номер" required />
+      <small id='emptyPhoneNumber' style="color: red; display:none;">Полето за телефонен номер не може да бъде празно!</small>
+      
+      <button id='orderButton'>потвърдете вашата поръчка</button>
+    </div>
+  </div>
+
+<script>
+  // Cart icon click
+  document.getElementById('cart').addEventListener('click', () => window.location.href = 'cart.html');
+
+  // Check user ID
+  console.log(localStorage.getItem('userId'));
+
+  const cartBody = document.getElementById('cartBody');
+  const totalAmountSpan = document.getElementById('totalAmount');
+
+  let cartItems = [];
+
+  function updateTotal() {
+    let total = 0;
+    cartItems.forEach(item => {
+      total += item.price * item.quantity;
+    });
+    const euro = (total * 0.5113).toFixed(2);
+    totalAmountSpan.textContent = total.toFixed(2) + 'лв/€' + euro;
+  }
+
+  function createCartRow(order) {
+    const tr = document.createElement('tr');
+
+    // Image cell
+    const imgTd = document.createElement('td');
+    const img = document.createElement('img');
+    img.className = 'item-img';
+
+    if (order['type'] === '_10L') {
+      order['price'] = 5;
+      img.src = 'trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png';
+    } else {
+      order['price'] = 2.50;
+      img.src = '49c6933f-cc82-4feb-9064-38ba2f6e81ea_removalai_preview.png';
+    }
+    imgTd.appendChild(img);
+    tr.appendChild(imgTd);
+
+    // Quantity cell
+    const qtyTd = document.createElement('td');
+    qtyTd.textContent = order['quantity'];
+    tr.appendChild(qtyTd);
+
+    // Type cell
+    const typeTd = document.createElement('td');
+    typeTd.textContent = order['type'].substring(1);
+    tr.appendChild(typeTd);
+
+    // Price (subtotal) cell
+    const subtotalTd = document.createElement('td');
+    const subtotal = order['price'] * order['quantity'];
+    subtotalTd.textContent = subtotal.toFixed(2) + 'лв/€' + (subtotal * 0.5113).toFixed(2);
+    tr.appendChild(subtotalTd);
+
+    // Append row
+    cartBody.appendChild(tr);
+  }
+
+  // Fetch cart items
+  fetch(`http://localhost:8080/order/getAllCartItems/` + localStorage.getItem('userId'))
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok: ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      cartItems = data;
+      if (!data || data.length === 0) {
+        const msg = document.createElement('h2');
+        msg.textContent = 'вашата количка е празна';
+        msg.style.textAlign = 'center';
+        msg.style.marginTop = '2em';
+        cartBody.innerHTML = '';
+        cartBody.appendChild(msg);
+        document.getElementById('totalAmount').textContent = '0.00';
+        document.getElementById('orderButton').disabled = true;
+        document.getElementById('orderButton').style.opacity = 0.5;
+        return;
+      }
+      cartBody.innerHTML = '';
+      data.forEach(order => createCartRow(order));
+      updateTotal();
+    })
+    .catch(err => console.error('Error fetching cart items:', err));
+
+  // Order button click
+  document.getElementById('orderButton').addEventListener('click', () => {
+    const address = document.getElementById('address');
+    const phone = document.getElementById('phonenumber');
+    const emptyAddr = document.getElementById('emptyAddress');
+    const emptyPhone = document.getElementById('emptyPhoneNumber');
+
+    // Validate inputs
+    let valid = true;
+    if (address.value.trim().length === 0) {
+      emptyAddr.style.display = 'block';
+      valid = false;
+    } else {
+      emptyAddr.style.display = 'none';
+    }
+    if (phone.value.trim().length === 0) {
+      emptyPhone.style.display = 'block';
+      valid = false;
+    } else {
+      emptyPhone.style.display = 'none';
+    }
+
+    if (!valid) return;
+
+    // Prepare data
+    const sendData = {
+      address: address.value.trim(),
+      phoneNumber: phone.value.trim()
+    };
+
+    // Send order
+    fetch(`http://localhost:8080/order/createOrder/` + localStorage.getItem('userId'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sendData)
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok: ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      window.location.href = 'successfulyCreatedOrderMessage.html';
+    })
+    .catch(err => console.error('Error:', err));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WaterShop - Fresh Water for You</title>
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* Reset some default styles */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+    color: #333;
+    padding-top: 80px; /* for fixed navbar spacing */
+    line-height: 1.6;
+  }
+
+  /* Navbar styles */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8); /* soft gradient */
+    padding: 15px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+
+  nav .logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #d94f8f;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #6b4f5a;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  nav ul li a:hover {
+    background-color: rgba(217, 79, 143, 0.2);
+    color: #d94f8f;
+    transform: translateY(-2px);
+  }
+
+  /* Cart icon styles */
+  #cart {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  #cart:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 70px 20px 50px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+  }
+
+  .hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #a14666;
+    font-weight: 700;
+  }
+
+  .hero p {
+    font-size: 1.3em;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #555;
+  }
+
+  /* Products Section */
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 50px 20px;
+  }
+
+  .product-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    width: 240px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  }
+
+  .product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .product-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .product-title {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 1.2em;
+    color: #a14666;
+    text-align: center;
+  }
+
+  .product-price {
+    margin-top: 10px;
+    font-size: 1.1em;
+    color: #d94f8f;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* Footer styles */
+  footer {
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 50px;
+  }
+
+  /* Responsive adjustments */
+  @media(max-width: 768px) {
+    nav {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px 20px;
+    }
+
+    nav ul {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .products {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .product-card {
+      width: 90%;
+    }
+  }
+
+  /* Modal styles for confirmation */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .modal-content h2 {
+    margin-top: 0;
+    color: #a14666;
+    font-size: 1.4em;
+  }
+
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    min-width: 90px;
+  }
+
+  .btn-yes {
+    background-color: #a14666;
+    color: #fff;
+  }
+
+  .btn-yes:hover {
+    background-color: #d94f8f;
+  }
+
+  .btn-cancel {
+    background-color: #ccc;
+    color: #333;
+  }
+
+  .btn-cancel:hover {
+    background-color: #999;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav>
+  <a href="#" class="logo">WaterShop</a>
+  <ul>
+    <li><a href="starterPage.html">Продукти</a></li>
+    <li><a href="#">За нас</a></li>
+    <li><a href="#">Контакти</a></li>
+    <li>
+      <img id='cart' src="grocery-store.png" title="Cart" />
+    </li>
+    <li>
+      <a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1>Чиста освежаваща вода</h1>
+  <p>Останете хидратирани с нашата първокласна бутилирана вода, доставена прясна до вашата врата.</p>
+</section>
+
+<!-- Featured Products -->
+<section class="products">
+  <div id='500ml' class="product-card">
+    <img src="49c6933f-cc82-4feb-9064-38ba2f6e81ea_removalai_preview.png" alt="Вода Севтополис 500мл" />
+    <div class="product-title">Вода Севтополис 500мл</div>
+    <div class="product-price">2.50лв / €1.28</div>
+  </div>
+  <div id='10L' class="product-card">
+    <img src="trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png" alt="Вода Севтополис 10л" />
+    <div class="product-title">Вода Севтополис 10л</div>
+    <div class="product-price">5лв / €2.56</div>
+  </div>
+  <div class="product-card">
+    <img src="https://images.unsplash.com/photo-1601740981624-5832f8b8b1d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sparkling Water" />
+    <div class="product-title">Sparkling Water</div>
+    <div class="product-price">$2.20 / bottle</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  &copy; 2024 WaterShop. All rights reserved.
+</footer>
+
+<!-- Modal for logout confirmation -->
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <h2>Сигурни ли сте, че искате да излезете от профила си?</h2>
+    <div class="modal-buttons">
+      <button class="btn btn-yes" id="confirmLogout">Да</button>
+      <button class="btn btn-cancel" id="cancelLogout">Не</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('cart').addEventListener('click', () => window.location.href = 'cart.html');
+
+  // Product navigation
+  document.getElementById('500ml').addEventListener('click', () => window.location.href = '500ml.html');
+  document.getElementById('10L').addEventListener('click', () => window.location.href = '10L.html');
+
+  // Show modal on logout click
+  const logoutLink = document.getElementById('logout-link');
+  const modal = document.getElementById('logoutModal');
+  const confirmBtn = document.getElementById('confirmLogout');
+  const cancelBtn = document.getElementById('cancelLogout');
+
+  logoutLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    modal.style.display = 'flex'; // show modal
+  });
+
+  // Handle cancel button
+  cancelBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  // Handle confirm logout
+  confirmBtn.addEventListener('click', () => {
+    window.location.href = 'loginPage.html'; // proceed with logout
+  });
+
+  // Close modal when clicking outside modal content
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WaterShop - Refreshing Water for You</title>
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
+
+<style>
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+    color: #333;
+    padding-top: 80px; /* space for fixed navbar */
+    line-height: 1.6;
+  }
+
+  /* Navbar styles */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
+    padding: 15px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+
+  nav .logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #d94f8f;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #6b4f5a;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  nav ul li a:hover {
+    background-color: rgba(249, 161, 184, 0.2);
+    color: #d94f8f;
+    transform: translateY(-2px);
+  }
+
+  /* Cart icon styles */
+  #cart {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  #cart:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+
+  /* Container for product page, below navbar */
+  .container {
+    margin-top: 100px;
+    width: 98%;
+    max-width: 1200px;
+    min-height: calc(100vh - 100px);
+    background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: row;
+    padding: 40px;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Left side - info */
+  .left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* Right side - product image */
+  .right-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Headings and texts */
+  h1 {
+    font-size: 3.5em;
+    margin-bottom: 30px;
+    color: #d6336c;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .product-title {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #8e44ad;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .product-price {
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: #27ae60;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  /* Quantity selector */
+  .quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .quantity-container label {
+    font-size: 1.5em;
+    margin-right: 15px;
+    color: #16a085;
+  }
+
+  input[type=number] {
+    width: 80px;
+    padding: 15px;
+    font-size: 1.5em;
+    border: 3px solid #f39c12;
+    border-radius: 10px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  input[type=number]:focus {
+    border-color: #ff4081;
+    box-shadow: inset 0 0 8px rgba(255,64,129,0.3);
+  }
+
+  /* Add to cart button */
+  .add-to-cart-btn {
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+    background-color: #e91e63;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.8em;
+    color: #fff;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .add-to-cart-btn:hover {
+    background-color: #c2185b;
+    transform: translateY(-3px);
+  }
+
+  /* Confirmation message */
+  #cart-message {
+    margin-top: 25px;
+    padding: 15px 30px;
+    background-color: #ffe4e1;
+    color: #c2185b;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.4em;
+    display: none;
+    text-align: center;
+  }
+
+  /* Product image styling */
+  .product-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .product-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  }
+
+  /* Responsive styles */
+  @media(max-width: 768px){
+    .container {
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    .product-title {
+      font-size: 2em;
+    }
+    .product-price {
+      font-size: 1.6em;
+    }
+  }
+
+  /* Modal styles for logout confirmation */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999; /* On top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+
+  .modal-content h2 {
+    margin-top: 0;
+    color: #a14666;
+    font-size: 1.4em;
+  }
+
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    min-width: 90px;
+  }
+
+  .btn-yes {
+    background-color: #a14666;
+    color: #fff;
+  }
+
+  .btn-yes:hover {
+    background-color: #d94f8f;
+  }
+
+  .btn-cancel {
+    background-color: #ccc;
+    color: #333;
+  }
+
+  .btn-cancel:hover {
+    background-color: #999;
+  }
+</style>
+</head>
+<body>
+<!-- Navbar -->
+<nav>
+  <a href="#" class="logo">WaterShop</a>
+  <ul>
+    <li><a href="starterPage.html">Продукти</a></li>
+    <li><a href="#">За нас</a></li>
+    <li><a href="#">Контакти</a></li>
+    <li><img id='cart' src="grocery-store.png" title="Cart" /></li>
+    <li><a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a></li>
+  </ul>
+</nav>
+
+<!-- Main container -->
+<div class="container">
+  <!-- Left side -->
+  <div class="left-side">
+    <h1>Вода Севтополис</h1>
+    <div class="product-title">10л</div>
+    <div class="product-price">5лв / €2.56</div>
+    <div class="quantity-container" style="display:flex; align-items:center; justify-content:center; margin-bottom:40px;">
+      <label for="quantity" style="font-size:1.5em; margin-right:15px; color:#16a085;">Брой:</label>
+      <input type="number" id="quantity" min="1" max="50" value="1" style="padding:15px; font-size:1.5em; border:3px solid #f39c12; border-radius:10px; outline:none; text-align:center;">
+    </div>
+    <button id="add-to-cart-btn" class="add-to-cart-btn" style="width:100%; max-width:350px; padding:20px; background-color:#e91e63; border:none; border-radius:12px; font-size:1.8em; color:#fff; cursor:pointer; margin:0 auto; display:block;">Добави в количката</button>
+    <div id="cart-message" style="margin-top:25px; padding:15px 30px; background-color:#ffe4e1; color:#c2185b; border-radius:8px; font-weight:600; font-size:1.4em; display:none; text-align:center;">Продуктът е добавен в количката!</div>
+  </div>
+  <!-- Right side -->
+  <div class="right-side" style="display:flex; justify-content:center; align-items:center; padding:20px;">
+    <img src="trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png" alt="Product Image" class="product-image" style="width:100%; max-width:600px; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.2); transition:transform 0.3s, box-shadow 0.3s;">
+  </div>
+</div>
+
+<!-- Logout modal -->
+<div id="logoutModal" class="modal" style="display:none; align-items:center; justify-content:center;">
+  <div class="modal-content">
+    <h2>Сигурни ли сте, че искате да излезете от профила си?</h2>
+    <div class="modal-buttons" style="margin-top:20px; display:flex; justify-content:space-around; flex-wrap:wrap;">
+      <button class="btn btn-yes" id="confirmLogout" style="background-color:#a14666; color:#fff;">Да</button>
+      <button class="btn btn-cancel" id="cancelLogout" style="background-color:#ccc; color:#333;">Не</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Logout modal handling
+  document.getElementById('logout-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logoutModal').style.display='flex';
+  });
+  document.getElementById('cancelLogout').addEventListener('click', () => {
+    document.getElementById('logoutModal').style.display='none';
+  });
+  document.getElementById('confirmLogout').addEventListener('click', () => {
+    localStorage.setItem('userId', 0);
+    window.location.href='loginPage.html';
+  });
+  window.onclick = (e) => {
+    if(e.target==document.getElementById('logoutModal')){
+      document.getElementById('logoutModal').style.display='none';
+    }
+  }
+
+  // Cart icon click
+  document.getElementById('cart').addEventListener('click', () => window.location.href='cart.html');
+
+  // Add to cart button
+  document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+    if(localStorage.getItem('userId')==0 || localStorage.getItem('userId')===null){
+      window.location.href='loginPage.html';
+      return;
+    }
+    let data = {
+      quantity: document.getElementById('quantity').value,
+      type: "_10L"
+    };
+    fetch('http://localhost:8080/order/addCartItem/' + localStorage.getItem('userId'),{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data)
+    }).then(res => {
+      if(res.ok){
+        document.getElementById('cart-message').textContent=`Добавенa ${data.quantity} вода във вашата количка!`;
+        document.getElementById('cart-message').style.display='block';
+        setTimeout(() => { document.getElementById('cart-message').style.display='none'; }, 3000);
+      } else {
+        alert('Грешка при добавяне');
+      }
+    }).catch(console.error);
+  });
+</script>
+</body>
+</html>
