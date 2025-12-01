@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Order Page</title>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <style>
   /* Reset and base styles */
   body {
@@ -207,7 +209,59 @@
     transform: translateY(-2px);
   }
 
-  /* Responsive design */
+  /* Button to open map modal */
+  #openMapBtn {
+    display: inline-block;
+    padding: 12px 20px;
+    margin-top: 15px;
+    background-color: #cc3366;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #openMapBtn:hover {
+    background-color: #b22f59;
+  }
+
+  /* Modal overlay for map */
+  #mapModal {
+    display: none; /* hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #mapContainer {
+    width: 90%;
+    max-width: 800px;
+    height: 500px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #closeMapBtn {
+    position: absolute;
+    top: 10px; right: 15px;
+    background: #e75480;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    z-index: 1000;
+  }
+
   @media(max-width: 600px){
     .order-container {
       padding: 30px 20px;
@@ -223,19 +277,15 @@
       <li><a href="starterPage.html">Продукти</a></li>
       <li><a href="#">За нас</a></li>
       <li><a href="">Контакти</a></li>
-      <li>
-        <img id='cart' src="grocery-store.png" title="Cart" />
-      </li>
-      <li>
-        <a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a>
-      </li>
+      <li><img id='cart' src="grocery-store.png" title="Cart" /></li>
+      <li><a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a></li>
     </ul>
   </nav>
 
   <!-- Main content -->
   <div class="order-container">
     <h1>Вашата поръчка</h1>
-    <!-- Cart Items Table -->
+    <!-- Cart Items -->
     <div class="cart-section">
       <div class="cart-title">Вашата количка</div>
       <table>
@@ -247,159 +297,199 @@
             <th style="width:150px;">Цена</th>
           </tr>
         </thead>
-        <tbody id="cartBody">
-          <!-- Items will be dynamically inserted here -->
-        </tbody>
+        <tbody id="cartBody"></tbody>
       </table>
       <div class="total-container">
         Обща цена: <span id="totalAmount">0.00</span>
       </div>
     </div>
 
-    <!-- Order Form -->
-    <div style="margin-top:20px;">
-      <label for="address">Адрес:</label>
-      <input type="text" id="address" placeholder="Въведете вашия адрес" required />
-      <small id='emptyAddress' style="color: red; display:none;">Полето за адрес не може да бъде празно!</small>
-      
-      <label for="phonenumber">Телефонен номер:</label>
-      <input type="tel" id="phonenumber" placeholder="Въведете вашия телефонен номер" required />
-      <small id='emptyPhoneNumber' style="color: red; display:none;">Полето за телефонен номер не може да бъде празно!</small>
-      
-      <button id='orderButton'>потвърдете вашата поръчка</button>
+    <!-- Address selection -->
+    <label for="map">Изберете адрес от картата:</label>
+    <button id="openMapBtn">Изберете адрес от картата</button>
+
+    <!-- Map modal -->
+    <div id="mapModal">
+      <div id="mapContainer">
+        <button id="closeMapBtn">Затвори</button>
+        <div id="map" style="width:100%; height:100%;"></div>
+      </div>
     </div>
+
+    <!-- Address input -->
+    <label for="address">Адрес:</label>
+    <input type="text" id="address" placeholder="Въведете вашия адрес" required />
+    <small id='emptyAddress' style="color: red; display:none;">Полето за адрес не може да бъде празно!</small>
+    <!-- Phone -->
+    <label for="phonenumber">Телефонен номер:</label>
+    <input type="tel" id="phonenumber" placeholder="Въведете вашия телефонен номер" required />
+    <small id='emptyPhoneNumber' style="color: red; display:none;">Полето за телефонен номер не може да бъде празно!</small>
+    <!-- Confirm order -->
+    <button id='orderButton'>потвърдете вашата поръчка</button>
   </div>
 
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-  // Cart icon click
-  document.getElementById('cart').addEventListener('click', () => window.location.href = 'cart.html');
+ 
+  let map, marker;
 
-  // Check user ID
+  function initMap() {
+    const defaultLatLng = [42.6977, 23.3219]; 
+    map = L.map('map').setView(defaultLatLng, 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    marker = L.marker(defaultLatLng, { draggable: true }).addTo(map);
+    marker.on('dragend', () => {
+      const pos = marker.getLatLng();
+      fetchAddress(pos.lat, pos.lng);
+    });
+    map.on('click', e => {
+      marker.setLatLng(e.latlng);
+      fetchAddress(e.latlng.lat, e.latlng.lng);
+    });
+  }
+
+  // Fetch address from lat/lng
+  function fetchAddress(lat, lng) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.display_name) {
+          document.getElementById('address').value = data.display_name;
+        }
+      }).catch(err => console.error('Error:', err));
+  }
+
+ 
+const mapModal = document.getElementById('mapModal');
+const openMapBtn = document.getElementById('openMapBtn');
+const closeMapBtn = document.getElementById('closeMapBtn');
+
+openMapBtn.onclick = () => {
+  mapModal.style.display = 'flex';
+  setTimeout(() => {
+    if (!map) {
+      initMap();
+    } else {
+      map.invalidateSize();
+    }
+  }, 100);
+};
+
+closeMapBtn.onclick = () => {
+  mapModal.style.display = 'none';
+};
+
+window.onclick = e => {
+  if (e.target == mapModal) {
+    mapModal.style.display = 'none';
+  }
+};
+
+// Initialize map on page load
+window.onload = () => {
+  if (!map) initMap();
+  // You can keep your other code here (cart, order, etc.)
+};
+</script>
+<script>
+  // Your existing scripts for cart, order handling, etc.
+  document.getElementById('cart').addEventListener('click', ()=> window.location.href='cart.html');
   console.log(localStorage.getItem('userId'));
-
   const cartBody = document.getElementById('cartBody');
   const totalAmountSpan = document.getElementById('totalAmount');
-
   let cartItems = [];
-
   function updateTotal() {
     let total = 0;
-    cartItems.forEach(item => {
-      total += item.price * item.quantity;
-    });
+    cartItems.forEach(i => total += i.price * i.quantity);
     const euro = (total * 0.5113).toFixed(2);
     totalAmountSpan.textContent = total.toFixed(2) + 'лв/€' + euro;
   }
-
   function createCartRow(order) {
     const tr = document.createElement('tr');
-
-    // Image cell
-    const imgTd = document.createElement('td');
+    const tdImg = document.createElement('td');
     const img = document.createElement('img');
     img.className = 'item-img';
-
     if (order['type'] === '_10L') {
       order['price'] = 5;
-      img.src = 'trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png';
+      img.src='trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png';
     } else {
       order['price'] = 2.50;
-      img.src = '49c6933f-cc82-4feb-9064-38ba2f6e81ea_removalai_preview.png';
+      img.src='49c6933f-cc82-4feb-9064-38ba2f6e81ea_removalai_preview.png';
     }
-    imgTd.appendChild(img);
-    tr.appendChild(imgTd);
-
-    // Quantity cell
-    const qtyTd = document.createElement('td');
-    qtyTd.textContent = order['quantity'];
-    tr.appendChild(qtyTd);
-
-    // Type cell
-    const typeTd = document.createElement('td');
-    typeTd.textContent = order['type'].substring(1);
-    tr.appendChild(typeTd);
-
-    // Price (subtotal) cell
-    const subtotalTd = document.createElement('td');
+    tdImg.appendChild(img);
+    tr.appendChild(tdImg);
+    const tdQty = document.createElement('td');
+    tdQty.textContent = order['quantity'];
+    tr.appendChild(tdQty);
+    const tdType = document.createElement('td');
+    tdType.textContent = order['type'].substring(1);
+    tr.appendChild(tdType);
+    const tdPrice = document.createElement('td');
     const subtotal = order['price'] * order['quantity'];
-    subtotalTd.textContent = subtotal.toFixed(2) + 'лв/€' + (subtotal * 0.5113).toFixed(2);
-    tr.appendChild(subtotalTd);
-
-    // Append row
+    tdPrice.textContent = subtotal.toFixed(2) + 'лв/€' + (subtotal * 0.5113).toFixed(2);
+    tr.appendChild(tdPrice);
     cartBody.appendChild(tr);
   }
-
-  // Fetch cart items
-  fetch(`http://localhost:8080/order/getAllCartItems/` + localStorage.getItem('userId'))
+  fetch(`http://localhost:8080/order/getAllCartItems/`+localStorage.getItem('userId'))
     .then(res => {
-      if (!res.ok) throw new Error('Network response was not ok: ' + res.statusText);
+      if (!res.ok) throw new Error('Network response was not ok');
       return res.json();
     })
     .then(data => {
       cartItems = data;
       if (!data || data.length === 0) {
         const msg = document.createElement('h2');
-        msg.textContent = 'вашата количка е празна';
-        msg.style.textAlign = 'center';
-        msg.style.marginTop = '2em';
-        cartBody.innerHTML = '';
+        msg.textContent='вашата количка е празна';
+        msg.style.textAlign='center';
+        msg.style.marginTop='2em';
+        cartBody.innerHTML='';
         cartBody.appendChild(msg);
-        document.getElementById('totalAmount').textContent = '0.00';
-        document.getElementById('orderButton').disabled = true;
-        document.getElementById('orderButton').style.opacity = 0.5;
+        document.getElementById('totalAmount').textContent='0.00';
+        document.getElementById('orderButton').disabled=true;
+        document.getElementById('orderButton').style.opacity=0.5;
         return;
       }
-      cartBody.innerHTML = '';
+      cartBody.innerHTML='';
       data.forEach(order => createCartRow(order));
       updateTotal();
-    })
-    .catch(err => console.error('Error fetching cart items:', err));
+    }).catch(err => console.log('Error', err));
 
-  // Order button click
   document.getElementById('orderButton').addEventListener('click', () => {
     const address = document.getElementById('address');
     const phone = document.getElementById('phonenumber');
     const emptyAddr = document.getElementById('emptyAddress');
     const emptyPhone = document.getElementById('emptyPhoneNumber');
-
-    // Validate inputs
-    let valid = true;
-    if (address.value.trim().length === 0) {
-      emptyAddr.style.display = 'block';
-      valid = false;
+    let valid=true;
+    if (address.value.trim().length===0) {
+      emptyAddr.style.display='block';
+      valid=false;
     } else {
-      emptyAddr.style.display = 'none';
+      emptyAddr.style.display='none';
     }
-    if (phone.value.trim().length === 0) {
-      emptyPhone.style.display = 'block';
-      valid = false;
+    if (phone.value.trim().length===0) {
+      emptyPhone.style.display='block';
+      valid=false;
     } else {
-      emptyPhone.style.display = 'none';
+      emptyPhone.style.display='none';
     }
-
     if (!valid) return;
-
-    // Prepare data
     const sendData = {
       address: address.value.trim(),
       phoneNumber: phone.value.trim()
     };
-
-    // Send order
-    fetch(`http://localhost:8080/order/createOrder/` + localStorage.getItem('userId'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch(`http://localhost:8080/order/createOrder/`+localStorage.getItem('userId'), {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify(sendData)
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Network response was not ok: ' + res.statusText);
+    }).then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
       return res.json();
-    })
-    .then(data => {
+    }).then(data => {
       console.log(data);
-      window.location.href = 'successfulyCreatedOrderMessage.html';
-    })
-    .catch(err => console.error('Error:', err));
+      window.location.href='successfulyCreatedOrderMessage.html';
+    }).catch(err => console.error('Error:',err));
   });
 </script>
 </body>

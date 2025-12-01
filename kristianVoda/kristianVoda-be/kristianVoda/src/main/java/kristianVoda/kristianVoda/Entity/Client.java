@@ -25,7 +25,7 @@ public class Client {
     private String email;
 
    @Column(name = "Password")
-    private String Password;
+    private String password;
 
    @Column(name = "first_name")
     private String firstName;
@@ -40,5 +40,8 @@ public class Client {
     @Column
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
+
+    @Column(name = "role")
+    private final String role = "USER";
 
 }

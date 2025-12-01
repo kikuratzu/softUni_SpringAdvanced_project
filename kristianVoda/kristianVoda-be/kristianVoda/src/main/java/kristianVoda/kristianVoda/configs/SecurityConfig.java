@@ -17,16 +17,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // your other security configs
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .csrf(csrf -> csrf.disable()); // disable CSRF for testing; enable as needed
+                .authorizeHttpRequests(auth -> auth
+                        // Example: restrict /admin/** to ADMIN role
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Example: restrict /user/** to USER role
+                        .requestMatchers("/user/**").hasRole("USER")
+                        // Allow all other requests
+                        .anyRequest().permitAll()
+                )
+                .csrf(csrf -> csrf.disable());
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500")); // your frontend URL
+        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

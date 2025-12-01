@@ -6,6 +6,7 @@ import kristianVoda.kristianVoda.Entity.CartItem;
 import kristianVoda.kristianVoda.Entity.Order;
 import kristianVoda.kristianVoda.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class OrderController {
    private OrderService service;
 
 
-
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("getAllCartItems/{id}")
     public List<CartItemDTO> getAllItems(
             @PathVariable final Long id
     ) {
         return service.getAllCartItems(id);
     }
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("addCartItem/{id}")
     public CartItemDTO add(
             @PathVariable final Long id,
@@ -34,7 +35,7 @@ public class OrderController {
             ) {
         return service.addItemToCart(id, dto);
     }
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("createOrder/{id}")
     public List<CartItem> create(
             @PathVariable final Long id,
@@ -42,6 +43,7 @@ public class OrderController {
     ) {
         return service.createOrder(id, dto);
     }
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("deleteCartItem/{clientId}/{cartItemId}")
     public void deleteCartItem(
             @PathVariable final Long clientId,
