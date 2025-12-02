@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us - WaterShop</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+    color: #333;
+    padding-top: 80px;
+    line-height: 1.6;
+  }
+ 
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
+    padding: 15px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+  nav .logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #d94f8f;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+  }
+  nav ul li a {
+    text-decoration: none;
+    color: #6b4f5a;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  nav ul li a:hover {
+    background-color: rgba(217, 79, 143, 0.2);
+    color: #d94f8f;
+    transform: translateY(-2px);
+  }
+  /* Logout modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+  }
+  .modal-content h2 {
+    margin-top: 0;
+    color: #a14666;
+    font-size: 1.4em;
+  }
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    min-width: 90px;
+  }
+  .btn-yes {
+    background-color: #a14666;
+    color: #fff;
+  }
+  .btn-yes:hover {
+    background-color: #d94f8f;
+  }
+  .btn-cancel {
+    background-color: #ccc;
+    color: #333;
+  }
+  .btn-cancel:hover {
+    background-color: #999;
+  }
+
+  /* Content styles */
+  .content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 100px 20px 50px 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #a14666;
+    margin-bottom: 30px;
+    font-size: 2.8em;
+  }
+  p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  footer {
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 50px;
+  }
+  @media(max-width: 768px) {
+    nav {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px 20px;
+    }
+    nav ul {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a href="#" class="logo">WaterShop</a>
+  <ul>
+    <li><a href="starterPage.html">Продукти</a></li>
+    <li><a href="aboutUs.html">За нас</a></li>
+    <li><a href="contact.html">Контакти</a></li>
+    <li>
+      <a href="cart.html">
+        <img src="grocery-store.png" style="width:30px; height:30px;" title="Cart" />
+      </a>
+    </li>
+    <li>
+      <a href="#" id="logout-link" style="font-weight: bold; color: #a14666;">Logout</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<div class="content">
+  <h1>За Нас</h1>
+  <p>WaterShop е водещ доставчик на прясна, бутилирана вода, посрещайки нуждите на нашите клиенти с висококачествена вода и отлично обслужване. Нашата мисия е да осигурим чиста и освежаваща вода, която да поддържа вашето здраве и хидратация.</p>
+  <p>Със страст към качеството и устойчивостта, ние се ангажираме с опазването на околната среда и предоставянето на най-добрите продукти за нашите клиенти.</p>
+  <h2>Нашата История</h2>
+  <p>Основана през 2020 г., WaterShop се превърна в предпочитан избор за хората, търсещи надежден източник на прясна вода. Постоянно се стремим към иновации и подобрения, за да останем лидери в индустрията.</p>
+  <h2>Нашите Ценности</h2>
+  <ul>
+    <li>Качество</li>
+    <li>Устойчивост</li>
+    <li>Обслужване на клиенти</li>
+    <li>Инновации</li>
+  </ul>
+</div>
+
+<!-- Logout confirmation modal -->
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <h2>Сигурни ли сте, че искате да излезете от профила си?</h2>
+    <div class="modal-buttons">
+      <button class="btn btn-yes" id="confirmLogout">Да</button>
+      <button class="btn btn-cancel" id="cancelLogout">Не</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts for logout modal -->
+<script>
+  const logoutLink = document.getElementById('logout-link');
+  const modal = document.getElementById('logoutModal');
+  const confirmBtn = document.getElementById('confirmLogout');
+  const cancelBtn = document.getElementById('cancelLogout');
+
+  logoutLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    localStorage.setItem('userId', 0);
+    window.location.href = 'loginPage.html';
+  });
+
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+
+</body>
+</html>
