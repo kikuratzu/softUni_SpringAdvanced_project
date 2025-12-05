@@ -1,7 +1,8 @@
 package kristianVoda.kristianVoda.Entity;
-
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,8 +14,8 @@ import lombok.*;
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "name")
     private String name;

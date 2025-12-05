@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
-  /* Reset some default styles */
+ 
   * {
     box-sizing: border-box;
     margin: 0;
@@ -21,16 +21,16 @@
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #fff0f5, #ffe4e1);
     color: #333;
-    padding-top: 80px; /* for fixed navbar spacing */
+    padding-top: 80px; 
     line-height: 1.6;
   }
 
-  /* Navbar styles */
+  
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(90deg, #f9c0d5, #f9a1b8); /* soft gradient */
+    background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
     padding: 15px 40px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     position: fixed;
@@ -71,7 +71,7 @@
     transform: translateY(-2px);
   }
 
-  /* Cart icon styles */
+ 
   #cart {
     width: 30px;
     height: 30px;
@@ -84,7 +84,7 @@
     filter: brightness(1.2);
   }
 
-  /* Hero Section */
+
   .hero {
     padding: 70px 20px 50px 20px;
     text-align: center;
@@ -105,7 +105,7 @@
     color: #555;
   }
 
-  /* Products Section */
+ 
   .products {
     display: flex;
     flex-wrap: wrap;
@@ -157,7 +157,7 @@
     font-weight: 500;
   }
 
-  /* Footer styles */
+  
   footer {
     background: linear-gradient(90deg, #f9c0d5, #f9a1b8);
     text-align: center;
@@ -167,7 +167,7 @@
     margin-top: 50px;
   }
 
-  /* Responsive adjustments */
+
   @media(max-width: 768px) {
     nav {
       flex-direction: column;
@@ -192,7 +192,7 @@
     }
   }
 
-  /* Modal styles for confirmation */
+  
   .modal {
     display: none;
     position: fixed;
@@ -265,11 +265,12 @@
 </head>
 <body>
 
-<!-- Navigation Bar -->
+
 <nav>
   <a href="#" class="logo">WaterShop</a>
   <ul>
     <li><a href="starterPage.html">Продукти</a></li>
+    <li><a href="Orders.html">Поръчки</a></li>
     <li><a href="aboutUs.html">За нас</a></li>
     <li><a href="contact.html">Контакти</a></li>
     <li>
@@ -281,13 +282,13 @@
   </ul>
 </nav>
 
-<!-- Hero Section -->
+
 <section class="hero">
   <h1>Чиста освежаваща вода</h1>
   <p>Останете хидратирани с нашата първокласна бутилирана вода, доставена прясна до вашата врата.</p>
 </section>
 
-<!-- Featured Products -->
+
 <section class="products">
   <div id='500ml' class="product-card">
     <img src="49c6933f-cc82-4feb-9064-38ba2f6e81ea_removalai_preview.png" alt="Вода Севтополис 500мл" />
@@ -301,12 +302,10 @@
   </div>
 </section>
 
-<!-- Footer -->
 <footer>
   &copy; 2024 WaterShop. All rights reserved.
 </footer>
 
-<!-- Modal for logout confirmation -->
 <div id="logoutModal" class="modal">
   <div class="modal-content">
     <h2>Сигурни ли сте, че искате да излезете от профила си?</h2>
@@ -320,11 +319,11 @@
 <script>
   document.getElementById('cart').addEventListener('click', () => window.location.href = 'cart.html');
 
-  // Product navigation
+  
   document.getElementById('500ml').addEventListener('click', () => window.location.href = '500ml.html');
   document.getElementById('10L').addEventListener('click', () => window.location.href = '10L.html');
 
-  // Show modal on logout click
+
   const logoutLink = document.getElementById('logout-link');
   const modal = document.getElementById('logoutModal');
   const confirmBtn = document.getElementById('confirmLogout');
@@ -332,20 +331,20 @@
 
   logoutLink.addEventListener('click', function(event) {
     event.preventDefault();
-    modal.style.display = 'flex'; // show modal
+    modal.style.display = 'flex'; 
   });
 
-  // Handle cancel button
+  
   cancelBtn.addEventListener('click', () => {
     modal.style.display = 'none';
   });
 
-  // Handle confirm logout
+
   confirmBtn.addEventListener('click', () => {
-    window.location.href = 'loginPage.html'; // proceed with logout
+    window.location.href = 'loginPage.html'; 
   });
 
-  // Close modal when clicking outside modal content
+  
   window.onclick = function(event) {
     if (event.target == modal) {
       modal.style.display = 'none';

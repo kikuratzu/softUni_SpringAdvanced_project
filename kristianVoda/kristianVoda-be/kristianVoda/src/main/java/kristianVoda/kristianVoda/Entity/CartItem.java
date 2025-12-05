@@ -1,8 +1,9 @@
 package kristianVoda.kristianVoda.Entity;
-
 import jakarta.persistence.*;
 import kristianVoda.kristianVoda.enums.WaterTypes;
 import lombok.*;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,8 +14,8 @@ import lombok.*;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "client_id")

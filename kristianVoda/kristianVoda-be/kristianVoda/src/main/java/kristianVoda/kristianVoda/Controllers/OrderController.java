@@ -1,15 +1,16 @@
 package kristianVoda.kristianVoda.Controllers;
 
 import kristianVoda.kristianVoda.DTO.CartItemDTO;
+import kristianVoda.kristianVoda.DTO.CreatedOrdersDTO;
 import kristianVoda.kristianVoda.DTO.OrderDTO;
 import kristianVoda.kristianVoda.Entity.CartItem;
-import kristianVoda.kristianVoda.Entity.Order;
 import kristianVoda.kristianVoda.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("order")
@@ -23,14 +24,14 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("getAllCartItems/{id}")
     public List<CartItemDTO> getAllItems(
-            @PathVariable final Long id
+            @PathVariable final UUID id
     ) {
         return service.getAllCartItems(id);
     }
     @PreAuthorize("hasRole('USER')")
     @PostMapping("addCartItem/{id}")
     public CartItemDTO add(
-            @PathVariable final Long id,
+            @PathVariable final UUID id,
             @RequestBody final CartItemDTO dto
             ) {
         return service.addItemToCart(id, dto);
@@ -38,7 +39,7 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("createOrder/{id}")
     public List<CartItem> create(
-            @PathVariable final Long id,
+            @PathVariable final UUID id,
             @RequestBody final OrderDTO dto
     ) {
         return service.createOrder(id, dto);
@@ -46,10 +47,17 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("deleteCartItem/{clientId}/{cartItemId}")
     public void deleteCartItem(
-            @PathVariable final Long clientId,
-            @PathVariable final Long cartItemId
+            @PathVariable final UUID clientId,
+            @PathVariable final UUID cartItemId
     ) {
         service.deleteCartItem(clientId, cartItemId);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("getAllOrderedItems/{clientId}")
+    public List<CreatedOrdersDTO> getAllCartItems(
+            @PathVariable final UUID clientId
+    ) {
+      return service.getAllOrderedItems(clientId);
+    }
 }

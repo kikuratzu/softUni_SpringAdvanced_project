@@ -1,10 +1,9 @@
 package kristianVoda.kristianVoda.Entity;
-
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,8 +14,8 @@ import java.util.List;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "username")
     private String username;
@@ -43,5 +42,4 @@ public class Client {
 
     @Column(name = "role")
     private final String role = "USER";
-
 }

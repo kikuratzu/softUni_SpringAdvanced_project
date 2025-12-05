@@ -287,6 +287,7 @@
   <a href="#" class="logo">WaterShop</a>
   <ul>
     <li><a href="starterPage.html">Продукти</a></li>
+    <li><a href="Orders.html">Поръчки</a></li>
     <li><a href="aboutUs.html">За нас</a></li>
     <li><a href="contact.html">Контакти</a></li>
     <li>
@@ -317,7 +318,7 @@
   </div>
 </div>
 
-<!-- Logout Modal -->
+
 <div id="logoutModal" class="modal">
   <div class="modal-content">
     <h2>Сигурни ли сте, че искате да излезете от профила си?</h2>
@@ -328,14 +329,14 @@
   </div>
 </div>
 
-<!-- Scripts -->
+
 <script>
-  // Authentication check
+  
   if(localStorage.getItem('userId') == 0 || localStorage.getItem('userId') === null){
     window.location.href = 'loginPage.html';
   }
 
-  // Logout modal logic
+  
   const logoutLink = document.getElementById('logout-link');
   const modal = document.getElementById('logoutModal');
   const confirmBtn = document.getElementById('confirmLogout');
@@ -374,7 +375,7 @@
     cartItems.forEach(item => {
       subtotal += item.price * item.quantity;
     });
-    const total = subtotal; // modify if needed
+    const total = subtotal;
     const euroConversion = (subtotal * 0.5113).toFixed(2);
     const totalEuro = (total * 0.5113).toFixed(2);
     subtotalSpan.textContent = subtotal.toFixed(2) + 'лв/€' + euroConversion;
@@ -417,7 +418,7 @@
     removeIcon.src = 'x-mark.png';
     removeIcon.className = 'remove-icon';
 
-    // Set images and price based on type
+   
     if(order.type === '_10L'){
       order.price = 5;
       img.src = 'trapezna-voda-sevtopolis-10-l-vodavarna-removebg-preview.png';
@@ -427,10 +428,10 @@
     }
     img.className = 'productImg';
 
-    // Append product image
+   
     orderDiv.appendChild(img);
 
-    // Info section
+    
     const infoDiv = document.createElement('div');
     infoDiv.className = 'item-info';
 

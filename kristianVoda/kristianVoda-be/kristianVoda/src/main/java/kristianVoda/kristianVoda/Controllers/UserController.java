@@ -1,11 +1,12 @@
 package kristianVoda.kristianVoda.Controllers;
-
 import kristianVoda.kristianVoda.DTO.CreateUserDTO;
 import kristianVoda.kristianVoda.DTO.LoginUserDTO;
 import kristianVoda.kristianVoda.Services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController()
 @RequestMapping("login")
@@ -14,6 +15,7 @@ public class UserController {
 
     @Autowired
    private LoginService service;
+
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     public boolean checkForRightCredentials(
@@ -44,7 +46,7 @@ public class UserController {
     }
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/forgotPassword/email")
-    public Long resetPassword(
+    public UUID resetPassword(
             @RequestParam final String email
     ) {
         return service.findForgotPasswordDTOByEmail(email);
@@ -52,19 +54,16 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/forgotPassword/password/{id}")
     public boolean setNewPassword(
-            @PathVariable final Long id,
+            @PathVariable final UUID id,
             @RequestParam final String password
     ) {
         return service.setNewPassword(id, password);
     }
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/successfulLogin")
-    public Long findUserIdByUsernameOrEmail(
+    public UUID findUserIdByUsernameOrEmail(
             @RequestParam final String usernameOrEmail
     ) {
         return service.findUserIdByUsernameOrEmail(usernameOrEmail);
     }
-
-
-
 }

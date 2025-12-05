@@ -1,13 +1,13 @@
 package kristianVoda.kristianVoda.Entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,8 +17,8 @@ import java.util.List;
 public class Order {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -32,7 +32,4 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<CartItem> orderItems = new ArrayList<>();
-
-
-    
 }

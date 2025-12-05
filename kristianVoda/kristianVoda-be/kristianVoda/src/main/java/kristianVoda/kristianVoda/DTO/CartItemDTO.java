@@ -1,5 +1,4 @@
 package kristianVoda.kristianVoda.DTO;
-
 import kristianVoda.kristianVoda.enums.WaterTypes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemDTO extends BaseDTO {
-
     private WaterTypes type;
     private Integer quantity;
-
 }

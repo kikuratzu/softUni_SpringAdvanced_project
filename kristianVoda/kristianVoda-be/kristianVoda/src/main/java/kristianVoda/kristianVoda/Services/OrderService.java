@@ -1,6 +1,7 @@
 package kristianVoda.kristianVoda.Services;
 
 import kristianVoda.kristianVoda.DTO.CartItemDTO;
+import kristianVoda.kristianVoda.DTO.CreatedOrdersDTO;
 import kristianVoda.kristianVoda.DTO.OrderDTO;
 import kristianVoda.kristianVoda.Entity.Client;
 import kristianVoda.kristianVoda.Entity.CartItem;
@@ -11,28 +12,29 @@ import kristianVoda.kristianVoda.repo.OrderRepository;
 import kristianVoda.kristianVoda.repo.OrderedItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderService {
 
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
     @Autowired
-    CartItemRepository repo;
+    private CartItemRepository repo;
     @Autowired
-    OrderRepository orderRepo;
+    private OrderRepository orderRepo;
     @Autowired
-    OrderedItemRepository orderedItemRepository;
+    private OrderedItemRepository orderedItemRepository;
 
-      private CartItem findCartItemById(final Long id){
+    @Transactional(readOnly = true)
+      private CartItem findCartItemById(final UUID id){
         return repo.findByIdOrNull(id);
     }
 
-
-    public List<CartItemDTO> getAllCartItems(final Long id){
+    @Transactional(readOnly = true)
+    public List<CartItemDTO> getAllCartItems(final UUID id){
         List<CartItemDTO> cartItemDTOList = new ArrayList<>();
         loginService.findClientById(id).getCartItems().forEach(cartItem -> {
             CartItemDTO cartItemDTO = new CartItemDTO();
@@ -44,7 +46,8 @@ public class OrderService {
         return cartItemDTOList;
     }
 
-    public CartItemDTO addItemToCart(final Long id, final CartItemDTO dto){
+    @Transactional
+    public CartItemDTO addItemToCart(final UUID id, final CartItemDTO dto){
         CartItem order = new CartItem();
         order.setQuantity(dto.getQuantity());
         order.setWaterType(dto.getType());
@@ -57,7 +60,8 @@ public class OrderService {
 
     }
 
-    public List<CartItem> createOrder(final Long id, final OrderDTO dto){
+    @Transactional
+    public List<CartItem> createOrder(final UUID id, final OrderDTO dto){
         Client client = loginService.findClientById(id);
         Order order = new Order();
         order.setAddress(dto.getAddress());
@@ -79,10 +83,33 @@ public class OrderService {
         return order.getOrderItems();
     }
 
-    public void deleteCartItem(final Long clientId,final Long cartItemId){
+    @Transactional
+    public void deleteCartItem(final UUID clientId,final UUID cartItemId){
        repo.delete(findCartItemById(cartItemId));
-
     }
 
+    @Transactional(readOnly = true)
+    public List<CreatedOrdersDTO> getAllOrderedItems(UUID id){
+        List<CreatedOrdersDTO> createdOrdersDTOS = new ArrayList<>();
+        List<Order> orders = orderRepo.findByClient_Id(id);
+
+        if (!orders.isEmpty()) {
+            orders.stream()
+                    .flatMap(order ->
+                            orderedItemRepository.findAllOrderItemsByOrderId(order.getId()).stream()
+                                    .flatMap(orderItems -> orderItems.stream()
+                                            .map(orderItem ->
+                                                    CreatedOrdersDTO.builder()
+                                                            .orderId(order.getId())
+                                                            .quantity(orderItem.getQuantity())
+                                                            .types(orderItem.getWaterType())
+                                                            .build()
+                                            )
+                                    )
+                    )
+                    .forEach(createdOrdersDTOS::add);
+        }
+        return createdOrdersDTOS;
+    }
 
 }

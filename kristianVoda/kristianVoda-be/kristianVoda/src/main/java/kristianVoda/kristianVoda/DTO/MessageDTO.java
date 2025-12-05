@@ -6,8 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MessageDTO {
+public class MessageDTO extends BaseDTO {
     private String name;
     private String email;
     private String message;
